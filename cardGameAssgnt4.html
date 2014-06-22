@@ -2,17 +2,20 @@
   var name;
   name = prompt("Welcome! What is your name?");
   alert("Hi " + name +"! Let's play a guessing game where you guess the suit of my playing card! Be sure you can see the console on your screen.");
-  
+
   function Card (rank, suit) {
     this.rank = rank;
     this.suit = suit;
     this.showRank = function () {
-      var ranks = ["Ace", 2, 3, 4, 5, 6, 7, 8, 9, 10, "Jack", "Queen", "King"];
-      return ranks[this.rank-1];
+    var ranks = ["Ace", 2, 3, 4, 5, 6, 7, 8, 9, 10, "Jack", "Queen", "King"];
+    return ranks[this.rank-1];
+    }
+    this.showSuit = function () {
+      var suits = ["Hearts", "Spades", "Diamonds", "Clubs"]
+      return suits[this.suit-1];
     }
     this.show = function () {
-      var suits = ["Hearts", "Spades", "Diamonds", "Clubs"]
-      return this.showRank() + " of " + suits[this.suit - 1];
+    return this.showRank() + " of " + this.showSuit();
     }  
   }
 
@@ -31,34 +34,41 @@
   }
 
   function Game() {
-    deck = new Deck();
-    deck.init();
-    this.compPick = deal();
-
-    function deal() {
-      index = Math.floor(Math.random() * deck.cards.length)
-      try {
-        return deck.cards[index]
-      }
-      finally {
-        deck.cards.splice(index, 1)
+    function shuffle(n) {
+      deck = new Deck();
+      deck.init();
+      var i, j, k;
+      var temp;
+      // Shuffle the stack 'n' times.
+      for (i = 0; i < n; i++) {
+        for (j = 0; j < deck.cards.length; j++) {
+          k = Math.floor(Math.random() * deck.cards.length);
+          temp = deck.cards[j];
+          deck.cards[j] = deck.cards[k];
+          deck.cards[k] = temp;
+        }
       }
     }
-    var guess
-    guess = prompt("What suit is the card I'm holding? Guess 'Hearts', 'Diamonds', 'Clubs', or 'Spades'.");
+    shuffle(1);
+
+    function dealCard() {
+      if (this.deck.cards.length > 0) {
+        return this.deck.cards.shift();
+      }
+      else {return null;
+      }
+    }
+    var compPick = dealCard();
+    var guess = prompt("What suit is the card I'm holding? Guess 'Hearts', 'Diamonds', 'Clubs', or 'Spades'.");
     console.log("If you guess the suit of the card correctly, you win!")
-    console.log("My card is the: " + this.compPick.show());
+    console.log("My card is the: " + compPick.show());
     console.log("You guessed the suit: " + guess);
-    // I would like to add something like the following if/else statement below,
-    // but I can't figure out what to properly == 'guess' to on line 56 so that it ==
-    // to the suit of the card that was dealt. 
-    // As is, it always returns the 'else' statement and the player never wins:
-    // if (guess == this.compPick.suit) {
-    //   console.log("You win!")
-    // }
-    // else {
-    //   console.log("Better luck next time!")
-    // }
+    if (guess == compPick.showSuit()) {
+      console.log("You win!")
+    }
+    else {
+      console.log("Better luck next time!")
+    }
   }
   Game();
 </script>
