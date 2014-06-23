@@ -3,19 +3,30 @@
   name = prompt("Welcome! What is your name?");
   alert("Hi " + name +"! Let's play a guessing game where you guess the suit of my playing card! Be sure you can see the console on your screen.");
 
-  function Card (rank, suit) {
+  function Card (rank, suit, color) {
     this.rank = rank;
     this.suit = suit;
+    this.color= color;
     this.showRank = function () {
-    var ranks = ["Ace", 2, 3, 4, 5, 6, 7, 8, 9, 10, "Jack", "Queen", "King"];
-    return ranks[this.rank-1];
+      var ranks = ["Ace", 2, 3, 4, 5, 6, 7, 8, 9, 10, "Jack", "Queen", "King"];
+      return ranks[this.rank-1];
     }
+    var suits = ["Hearts", "Diamonds", "Spades", "Clubs"];
     this.showSuit = function () {
-      var suits = ["Hearts", "Spades", "Diamonds", "Clubs"]
       return suits[this.suit-1];
     }
+    //Would like to add color info in order to give a hint regarding which suit to guess
+    this.showColor = function () {
+      var colors = ["Red", "Black"];
+      if (this.suit == suits[0] || suits [1]) {
+        return colors[0];
+      }
+      else if (this.suit == suits[2] || suits[3]) {
+        return colors[1];
+      }
+    }
     this.show = function () {
-    return this.showRank() + " of " + this.showSuit();
+      return this.showRank() + " of " + this.showSuit();
     }  
   }
 
@@ -33,13 +44,14 @@
     }
   }
 
+  
+  var guess, compPick;
   function Game() {
     function shuffle(n) {
       deck = new Deck();
       deck.init();
       var i, j, k;
       var temp;
-      // Shuffle the stack 'n' times.
       for (i = 0; i < n; i++) {
         for (j = 0; j < deck.cards.length; j++) {
           k = Math.floor(Math.random() * deck.cards.length);
@@ -51,6 +63,7 @@
     }
     shuffle(1);
 
+    var compPick = dealCard();
     function dealCard() {
       if (this.deck.cards.length > 0) {
         return this.deck.cards.shift();
@@ -58,17 +71,25 @@
       else {return null;
       }
     }
-    var compPick = dealCard();
+    
     var guess = prompt("What suit is the card I'm holding? Guess 'Hearts', 'Diamonds', 'Clubs', or 'Spades'.");
-    console.log("If you guess the suit of the card correctly, you win!")
-    console.log("My card is the: " + compPick.show());
+    console.log("If you guess the suit of the card correctly, you win!");
     console.log("You guessed the suit: " + guess);
     if (guess == compPick.showSuit()) {
-      console.log("You win!")
+      console.log("You win! My card is the: " + compPick.show());
     }
     else {
-      console.log("Better luck next time!")
+      console.log("Better luck next time! My card was the " + compPick.show() + ".");
+      //Below is what I would like to have: a hint based on the suit color
+      // so far,the showColor always returns Red and never Black
+      //console.log("Guess again! Hint: the suit of my card is the color " + compPick.showColor()); 
     }
-  }
+  //I want the user to get a few guesses
+  // for(tries = 0; tries < 2; tries ++) {
+  //   if(guess == compPick.showSuit()) {
+  //     break;
+  //   }
+  //  Game();
+  }  
   Game();
 </script>
